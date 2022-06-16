@@ -34,13 +34,37 @@ def readbyid(id):
     return make_response(jsonify(myresult), 200)                        #send data result on webpage
 
 
-@app.route("/attractions/read", methods = ['POST'])
-def read():
+@app.route("/attractions/create", methods = ['POST'])
+def create():
     data = request.get_json()
     mydb = mysql.connector.connect(host=host, user = user, password=password, db=db)  #connrct database 
     mycursor = mydb.cursor(dictionary=True)
-    sql = "INSERT INTO  attractions (name, detail) VALUES (%s , %s)"
+    sql = "INSERT INTO  attractions (name,  detail) VALUES (%s , %s)"
     val = (data['name'], data['detail'] )
+    mycursor.execute(sql, val)  
+    mydb.commit()
+    
+    return make_response(jsonify({ " rowcount": mycursor.rowcount }), 200)
+
+@app.route("/attractions/update/<id>", methods = ['PUT'])
+def update(id):
+    data = request.get_json()
+    mydb = mysql.connector.connect(host=host, user = user, password=password, db=db)  #connrct database 
+    mycursor = mydb.cursor(dictionary=True)
+    sql = "UPDATE attractions SET name= %s, detail =%s WHERE id = %s"
+    val = (data['name'], data['detail'] )
+    mycursor.execute(sql, val)  
+    mydb.commit()
+    
+    return make_response(jsonify({ " rowcount": mycursor.rowcount }), 200)
+
+@app.route("/attractions/delete/<id>", methods = ['DELETE'])
+def delete(id):
+  
+    mydb = mysql.connector.connect(host=host, user = user, password=password, db=db)  #connrct database 
+    mycursor = mydb.cursor(dictionary=True)
+    sql = "DELETE FROM attractions WHERE id =%id"
+    val = (id,  )
     mycursor.execute(sql, val)  
     mydb.commit()
     
