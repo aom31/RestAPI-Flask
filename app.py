@@ -63,7 +63,7 @@ def delete(id):
   
     mydb = mysql.connector.connect(host=host, user = user, password=password, db=db)  #connrct database 
     mycursor = mydb.cursor(dictionary=True)
-    sql = "DELETE FROM attractions WHERE id =%id"
+    sql = "DELETE FROM attractions WHERE id =%s"
     val = (id,  )
     mycursor.execute(sql, val)  
     mydb.commit()
